@@ -4,6 +4,7 @@ import { isRight, unwrapEither } from '../utils/either'
 import { uploadFile } from '../functions/upload-file'
 import { getFile } from '../functions/get-file'
 import { minioIntegration } from '../services/minio-service'
+import { randomInt } from 'node:crypto'
 export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
     server.get(
         '/wopi/files/:fileId',
@@ -25,6 +26,7 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
                 return reply.status(200).send({
                     BaseFileName: fileName,
                     Size: file.size,
+                    UserCanWrite: true,
                 })
             }
             catch (error) {
