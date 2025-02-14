@@ -5,6 +5,7 @@ import { uploadFile } from '../functions/upload-file'
 import { getFile } from '../functions/get-file'
 import { minioIntegration } from '../services/minio-service'
 import { randomInt } from 'node:crypto'
+import { S3Error } from 'minio'
 export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
     server.get(
         '/wopi/files/:fileId',
@@ -24,14 +25,19 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
                 const file = await minioIntegration.statObject('collabora', fileName)
                 if (!file) return reply.status(404).send('')
 
-                return reply.status(200).send({
+                return reply.type("application/octet-stream").status(200).send({
                     BaseFileName: fileName,
                     Size: file.size,
                     UserCanWrite: true,
                 })
             }
             catch (error) {
-                console.log(error)
+                if (error instanceof S3Error) {
+                    console.log("Erro s3 tratado: ", error)
+                    return reply.status(404).send('')
+                } else {
+                    console.log(error)
+                }
             }
         }
     )

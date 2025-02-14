@@ -31,7 +31,7 @@ export const getFileRoute: FastifyPluginAsyncZod = async server => {
                         const concat = await Buffer.concat(chunks)
 
                         resolve(concat)
-                        return reply.status(200).send(concat)
+                        return reply.type("application/octet-stream").status(200).send(concat)
                     })
 
                     file.on('error', (err) => {
