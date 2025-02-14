@@ -28,10 +28,10 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
                 console.log(fileName)
 
                 await minioIntegration.sendFile('collabora', fileName, uploadedFile.file).then((res) => {
-                    reply.status(200)
+                    return reply.status(200)
                 }).catch((err) => {
                     console.log(err)
-                    reply.status(400)
+                    return reply.status(400)
                 })
 
             }

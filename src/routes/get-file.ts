@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { minioIntegration } from '../services/minio-service'
+import { S3Error } from 'minio'
 export const getFileRoute: FastifyPluginAsyncZod = async server => {
     server.get(
         '/wopi/files/:fileId/contents',
@@ -42,7 +43,13 @@ export const getFileRoute: FastifyPluginAsyncZod = async server => {
 
             }
             catch (error) {
-                console.log(error)
+                if (error instanceof S3Error) {
+                    console.log("Erro s3 tratado: ", error)
+                    return reply.status(404).send('')
+                } else {
+                    console.log(error)
+                }
+
             }
         }
     )
