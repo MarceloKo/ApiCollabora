@@ -14,7 +14,7 @@ export const getFileRoute: FastifyPluginAsyncZod = async server => {
         },
         async (request, reply) => {
             try {
-
+                console.log("getFileRoute")
 
                 const { fileId } = request.params
 

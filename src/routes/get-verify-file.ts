@@ -17,6 +17,7 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
         },
         async (request, reply) => {
             try {
+                console.log("getVerifyFileRoute")
                 const { fileId } = request.params
 
                 const fileName = `${fileId}.docx`

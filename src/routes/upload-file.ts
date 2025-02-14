@@ -15,7 +15,7 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
         },
         async (request, reply) => {
             try {
-
+                console.log("uploadFileRoute")
                 const { fileId } = request.params
                 const uploadedFile = await request.file()
                 console.log(uploadedFile)
