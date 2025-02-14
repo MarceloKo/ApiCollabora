@@ -15,7 +15,9 @@ import { getVerifyFileRoute } from './routes/get-verify-file'
 // import { getUploadsRoute } from './routes/get-uploads'
 // import { exportUploadsRoute } from './routes/export-uploads'
 
-const server = fastify()
+const server = fastify({
+    logger: true,
+})
 
 server.setValidatorCompiler(validatorCompiler)
 server.setSerializerCompiler(serializerCompiler)
