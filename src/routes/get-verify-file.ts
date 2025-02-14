@@ -25,7 +25,7 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
                 const file = await minioIntegration.statObject('collabora', fileName)
                 if (!file) return reply.status(404).send('')
 
-                return reply.type("application/octet-stream").status(200).send({
+                return reply.status(200).send({
                     BaseFileName: fileName,
                     Size: file.size,
                     UserCanWrite: true,
