@@ -6,17 +6,17 @@ import { minioIntegration } from '../services/minio-service'
 export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
     server.post(
         '/wopi/files/:fileId/contents',
-        {
-            schema: {
-                summary: 'Upload files',
-                tags: ['uploads'],
-                params: z.object({ fileId: z.string() }),
-            },
-        },
+        // {
+        //     schema: {
+        //         summary: 'Upload files',
+        //         tags: ['uploads'],
+        //         params: z.object({ fileId: z.string() }),
+        //     },
+        // },
         async (request, reply) => {
             try {
                 console.log("uploadFileRoute")
-                const { fileId } = request.params
+                const { fileId } = request.params as { fileId: string }
                 const uploadedFile = await request.file()
                 console.log(uploadedFile)
                 if (!uploadedFile) {
