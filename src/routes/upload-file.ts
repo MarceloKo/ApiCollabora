@@ -10,13 +10,13 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
             schema: {
                 summary: 'Upload files',
                 tags: ['uploads'],
-                consumes: ['application/octet-stream'],
                 params: z.object({ fileId: z.string() }),
             },
         },
         async (request, reply) => {
             try {
                 console.log("uploadFileRoute")
+                reply.header('Content-Type', 'application/octet-stream')
                 const { fileId } = request.params
                 const uploadedFile = await request.file()
                 console.log(uploadedFile)
@@ -29,6 +29,7 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
                 console.log(fileName)
 
                 await minioIntegration.sendFile('collabora', fileName, uploadedFile.file).then((res) => {
+                    console.log(res)
 
                     return reply.status(200)
                 }).catch((err) => {
