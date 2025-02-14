@@ -9,7 +9,7 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
         {
             schema: {
                 summary: 'Upload files',
-                consumes: ['multipart/form-data'],
+                // consumes: ['multipart/form-data'],
                 tags: ['uploads'],
                 params: z.object({ fileId: z.string() }),
             },
@@ -24,7 +24,7 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
 
                     },
                 })
-
+                console.log(uploadedFile)
                 if (!uploadedFile) {
                     return reply.status(400)
                 }
