@@ -22,6 +22,7 @@ export const getFileRoute: FastifyPluginAsyncZod = async server => {
 
 
                 const file = await minioIntegration.getFile('collabora', fileName)
+                if (!file) return reply.status(404).send('Arquivo não encontrado')
 
                 await new Promise((resolve, reject) => {
                     let chunks: Buffer[] = []
