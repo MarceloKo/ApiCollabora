@@ -1,7 +1,5 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { isRight, unwrapEither } from '../utils/either'
-import { uploadFile } from '../functions/upload-file'
 import { minioIntegration } from '../services/minio-service'
 export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
     server.post(
@@ -17,20 +15,19 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
         },
         async (request, reply) => {
             try {
-                console.log("uploadFileRoute")
+                console.log("[ UploadFileRoute ] - START")
+
                 const { fileId } = request.params as { fileId: string }
                 const uploadedFile = await request.body as Buffer;
                 if (!uploadedFile) {
                     return reply.status(400).send('No file uploaded')
                 }
 
-                // const split = uploadedFile.filename.split('.')
-                // const fileName = `${fileId}.${split[split.length - 1]}`
-                // console.log(fileName)
+
                 const fileName = `${fileId}.docx`
 
                 await minioIntegration.sendFile('collabora', fileName, uploadedFile).then((res) => {
-                    console.log(res)
+                    console.log("[ UploadFileRoute ] - File uploaded")
 
                     return reply.status(200).send()
                 }).catch((err) => {
@@ -40,7 +37,8 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
 
             }
             catch (error) {
-                console.log(error)
+                console.log("[ UploadFileRoute ] - ERROR", error)
+                return reply.status(404).send('')
             }
         }
     )

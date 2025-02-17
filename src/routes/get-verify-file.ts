@@ -14,12 +14,12 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
         },
         async (request, reply) => {
             try {
-                console.log("getVerifyFileRoute")
+                console.log("[ GetVerifyFileRoute ] - START")
                 const { fileId } = request.params
 
                 const fileName = `${fileId}.docx`
                 const file = await minioIntegration.statObject('collabora', fileName)
-                if (!file) return reply.status(404).send('')
+                if (!file) return reply.status(404).send('Arquivo não encontrado')
 
                 return reply.status(200).send({
                     BaseFileName: fileName,
@@ -28,12 +28,8 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
                 })
             }
             catch (error) {
-                if (error instanceof S3Error) {
-                    console.log("Erro s3 tratado: ", error)
-                    return reply.status(404).send('')
-                } else {
-                    console.log(error)
-                }
+                console.log("[ GetVerifyFileRoute ] - ERROR", error)
+                return reply.status(404).send('')
             }
         }
     )

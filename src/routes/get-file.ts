@@ -14,7 +14,7 @@ export const getFileRoute: FastifyPluginAsyncZod = async server => {
         },
         async (request, reply) => {
             try {
-                console.log("getFileRoute")
+                console.log("[ GetFileRoute ] - START")
 
                 const { fileId } = request.params
 
@@ -43,13 +43,8 @@ export const getFileRoute: FastifyPluginAsyncZod = async server => {
 
             }
             catch (error) {
-                if (error instanceof S3Error) {
-                    console.log("Erro s3 tratado: ", error)
-                    return reply.status(404).send('')
-                } else {
-                    console.log(error)
-                }
-
+                console.log("[ GetFileRoute ] - ERROR", error)
+                return reply.status(404).send('')
             }
         }
     )
