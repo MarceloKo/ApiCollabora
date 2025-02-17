@@ -17,6 +17,7 @@ import { getVerifyFileRoute } from './routes/get-verify-file'
 
 const server = fastify({
     logger: true,
+    bodyLimit: 1024 * 1024 * 1024, // 1GB
 })
 
 server.setValidatorCompiler(validatorCompiler)
@@ -52,6 +53,14 @@ server.register(fastifySwaggerUi, {
 server.register(uploadFileRoute)
 server.register(getFileRoute)
 server.register(getVerifyFileRoute)
+
+server.addContentTypeParser(
+    ['application/octet-stream', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+    { parseAs: 'buffer' },
+    (req, body, done) => {
+        done(null, body);
+    }
+);
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
     console.log('HTTP Server running!')

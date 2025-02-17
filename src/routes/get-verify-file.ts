@@ -1,10 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { isRight, unwrapEither } from '../utils/either'
-import { uploadFile } from '../functions/upload-file'
-import { getFile } from '../functions/get-file'
 import { minioIntegration } from '../services/minio-service'
-import { randomInt } from 'node:crypto'
 import { S3Error } from 'minio'
 export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
     server.get(

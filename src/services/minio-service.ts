@@ -18,7 +18,7 @@ class MinioIntegration {
 
     }
 
-    public async sendFile(bucket: string, objectName: string, file: Readable): Promise<{ url: string }> {
+    public async sendFile(bucket: string, objectName: string, file: Readable | Buffer): Promise<{ url: string }> {
         if (!this.minioClient) throw new Error('Minio client not initialized')
 
 

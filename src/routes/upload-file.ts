@@ -6,34 +6,37 @@ import { minioIntegration } from '../services/minio-service'
 export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
     server.post(
         '/wopi/files/:fileId/contents',
-        // {
-        //     schema: {
-        //         summary: 'Upload files',
-        //         tags: ['uploads'],
-        //         params: z.object({ fileId: z.string() }),
-        //     },
-        // },
+        {
+            schema: {
+                summary: 'Upload files',
+                consumes: ['application/octet-stream'],
+                tags: ['uploads'],
+                params: z.object({ fileId: z.string() }),
+            },
+
+        },
         async (request, reply) => {
             try {
-                console.log("uploadFileRoute")
+                console.log("[ FOI ] - uploadFileRoute")
+                console.log(request)
                 const { fileId } = request.params as { fileId: string }
-                const uploadedFile = await request.file()
-                console.log(uploadedFile)
+                const uploadedFile = await request.body as Buffer;
                 if (!uploadedFile) {
-                    return reply.status(400)
+                    return reply.status(400).send('No file uploaded')
                 }
 
-                const split = uploadedFile.filename.split('.')
-                const fileName = `${fileId}.${split[split.length - 1]}`
-                console.log(fileName)
+                // const split = uploadedFile.filename.split('.')
+                // const fileName = `${fileId}.${split[split.length - 1]}`
+                // console.log(fileName)
+                const fileName = `${fileId}.docx`
 
-                await minioIntegration.sendFile('collabora', fileName, uploadedFile.file).then((res) => {
+                await minioIntegration.sendFile('collabora', fileName, uploadedFile).then((res) => {
                     console.log(res)
 
-                    return reply.status(200)
+                    return reply.status(200).send()
                 }).catch((err) => {
                     console.log(err)
-                    return reply.status(400)
+                    return reply.status(400).send()
                 })
 
             }
