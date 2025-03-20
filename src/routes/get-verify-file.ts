@@ -22,10 +22,12 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
                 const bucket = pathWithBucket.shift()
                 if (!bucket) return reply.status(400).send('Bucket invalid!')
 
+                console.log('BUCKET', bucket)
+
                 const path = pathWithBucket.join('/')
                 if (!path) return reply.status(400).send('File name invalid!')
 
-                const file = await minioIntegration.statObject('bucket', path)
+                const file = await minioIntegration.statObject(bucket, path)
                 if (!file) return reply.status(404).send('Arquivo não encontrado')
 
                 return reply.status(200).send({
