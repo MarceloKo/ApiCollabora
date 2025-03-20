@@ -15,14 +15,21 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
         async (request, reply) => {
             try {
                 console.log("[ GetVerifyFileRoute ] - START")
-                const { fileId } = request.params
+                const { fileId: filePath } = request.params
 
-                const fileName = `${fileId}.docx`
-                const file = await minioIntegration.statObject('collabora', fileName)
+                let pathWithBucket = filePath.split('/')
+
+                const bucket = pathWithBucket.shift()
+                if (!bucket) return reply.status(400).send('Bucket invalid!')
+
+                const path = pathWithBucket.join('/')
+                if (!path) return reply.status(400).send('File name invalid!')
+
+                const file = await minioIntegration.statObject('bucket', path)
                 if (!file) return reply.status(404).send('Arquivo não encontrado')
 
                 return reply.status(200).send({
-                    BaseFileName: fileName,
+                    BaseFileName: path.split('/').pop(),
                     Size: file.size,
                     UserCanWrite: true,
                 })

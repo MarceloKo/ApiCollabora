@@ -16,12 +16,17 @@ export const getFileRoute: FastifyPluginAsyncZod = async server => {
             try {
                 console.log("[ GetFileRoute ] - START")
 
-                const { fileId } = request.params
+                const { fileId: filePath } = request.params
 
-                const fileName = `${fileId}.docx`
+                let pathWithBucket = filePath.split('/')
 
+                const bucket = pathWithBucket.shift()
+                if (!bucket) return reply.status(400).send('Bucket invalid!')
 
-                const file = await minioIntegration.getFile('collabora', fileName)
+                const path = pathWithBucket.join('/')
+                if (!path) return reply.status(400).send('File name invalid!')
+
+                const file = await minioIntegration.getFile(bucket, path)
                 if (!file) return reply.status(404).send('Arquivo não encontrado')
 
                 await new Promise((resolve, reject) => {

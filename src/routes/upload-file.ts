@@ -17,16 +17,21 @@ export const uploadFileRoute: FastifyPluginAsyncZod = async server => {
             try {
                 console.log("[ UploadFileRoute ] - START")
 
-                const { fileId } = request.params as { fileId: string }
+                const { fileId: filePath } = request.params as { fileId: string }
                 const uploadedFile = await request.body as Buffer;
                 if (!uploadedFile) {
                     return reply.status(400).send('No file uploaded')
                 }
 
+                let pathWithBucket = filePath.split('/')
 
-                const fileName = `${fileId}.docx`
+                const bucket = pathWithBucket.shift()
+                if (!bucket) return reply.status(400).send('Bucket invalid!')
 
-                await minioIntegration.sendFile('collabora', fileName, uploadedFile).then((res) => {
+                const path = pathWithBucket.join('/')
+                if (!path) return reply.status(400).send('File name invalid!')
+
+                await minioIntegration.sendFile(bucket, path, uploadedFile).then((res) => {
                     console.log("[ UploadFileRoute ] - File uploaded")
 
                     return reply.status(200).send()
