@@ -17,7 +17,7 @@ export const getVerifyFileRoute: FastifyPluginAsyncZod = async server => {
                 console.log("[ GetVerifyFileRoute ] - START")
                 const { fileId: filePath } = request.params
 
-                let pathWithBucket = filePath.split('/')
+                let pathWithBucket = filePath.split('$-$')
 
                 const bucket = pathWithBucket.shift()
                 if (!bucket) return reply.status(400).send('Bucket invalid!')
